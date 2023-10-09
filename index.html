@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+</head>
+<body>
+    <video id="video-element" autoplay playsinline muted></video>
+    <canvas></canvas>
+</body>
+
+<script>
+
+    const videoElement = document.getElementById('video-element')
+
+    async function startVideo() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            videoElement.srcObject = stream;
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+        }
+    }
+
+    startVideo();
+
+    const canvasElement = document.createElement('canvas');
+    const canvasContext = canvasElement.getContext('2d');
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onopen = () => {
+        console.log('WebSocket connection opened');
+    };
+
+    videoElement.addEventListener('play', () => {
+        setInterval(() => {
+            canvasElement.width = videoElement.videoWidth;
+            canvasElement.height = videoElement.videoHeight;
+            canvasContext.drawImage(videoElement, 0, 0, videoElement.videoWidth, videoElement.videoHeight);
+
+            // Convert the frame data to a Blob with the specified MIME type
+            canvasElement.toBlob((blob) => {
+                if (blob) {
+                    // Send the Blob containing the frame data
+                    socket.send(blob);
+                }
+            }, 'image/jpeg', 0.7);
+
+        }, 1000 / 30); // Capture and send frames at approximately 30 frames per second
+    });
+
+</script>
+
+</html>

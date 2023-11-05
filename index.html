@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
+    <title>Index</title>
+    <title>Index</title>
+
+
 </head>
 <body>
+    <p></p>
+    <p></p>
+
+    <p></p>
+
     <video id="video-element" autoplay playsinline muted></video>
     <canvas></canvas>
 </body>
@@ -39,7 +48,7 @@
             canvasElement.height = videoElement.videoHeight;
             canvasContext.drawImage(videoElement, 0, 0, videoElement.videoWidth, videoElement.videoHeight);
 
-            // Convert the frame data to a Blob with the specified MIME type
+            // Convegrt the frame data to a Blob with the specified MIME type
             canvasElement.toBlob((blob) => {
                 if (blob) {
                     // Send the Blob containing the frame data
